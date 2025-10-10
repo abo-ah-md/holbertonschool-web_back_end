@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
 def add(num1: float, num2: float) -> float:
-    '''this is an annotated function'''
+    """
+    Adds two float numbers together.
+
+    Args:
+        num1 (float): The first number to add.
+        num2 (float): The second number to add.
+
+    Returns:
+        float: The sum of num1 and num2.
+    """
     return num1 + num2
