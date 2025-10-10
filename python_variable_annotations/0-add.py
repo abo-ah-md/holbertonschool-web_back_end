@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""Module for basic addition with type annotations."""
+
+
 def add(num1: float, num2: float) -> float:
     """
     Adds two float numbers together.
