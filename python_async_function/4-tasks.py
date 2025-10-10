@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Module for running multiple task_wait_random coroutines and collecting delays in completion order."""
+"""Module for running multiple task_wait_random coroutines
+and collecting delays in completion order."""
 
 import asyncio
 from typing import List
