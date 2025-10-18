@@ -30,4 +30,4 @@ class Server:
         assert type(page_size) == int and page_size > 0
         dataset: List[List] = self.dataset()
         start, end = index_range(page, page_size)
-        return dataset[start:end] if start < len(dataset) else []
+        return dataset[start:end]
