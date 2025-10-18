@@ -2,14 +2,11 @@
 """this is a helper function for page indexing"""
 
 import csv
-import math
 from typing import List, Tuple
 
 
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
-    """on every next page the index will incrament to the size"""
-    start_index: int
-    end_index: int
+    """on every next page the index will increment to the size"""
     if page == 1:
         start_index = 0
     else:
@@ -33,11 +30,10 @@ class Server:
                 reader = csv.reader(f)
                 dataset = [row for row in reader]
             self.__dataset = dataset[1:]
-
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
-        """this method will return the appropaite page dataset"""
+        """this method will return the appropriate page dataset"""
         assert type(page) == int and page > 0
         assert type(page_size) == int and page_size > 0
         dataset = self.dataset()
