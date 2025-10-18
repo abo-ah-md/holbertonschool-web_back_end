@@ -3,10 +3,10 @@
 
 import csv
 import math
-from typing import List
+from typing import List, Tuple
 
 
-def index_range(page: int, page_size: int) -> tuple[int, int]:
+def index_range(page: int, page_size: int) -> Tuple[int, int]:
     """on every next page the index will incrament to the size"""
     start_index: int
     end_index: int
