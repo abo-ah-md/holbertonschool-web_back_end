@@ -36,6 +36,6 @@ class Server:
         """this method will return the appropriate page dataset"""
         assert type(page) == int and page > 0
         assert type(page_size) == int and page_size > 0
-        dataset = self.dataset()
+        dataset:list[str]= self.dataset()
         start, end = index_range(page, page_size)
         return dataset[start:end] if start < len(dataset) else []
