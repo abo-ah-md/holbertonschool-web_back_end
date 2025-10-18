@@ -3,17 +3,7 @@
 
 import csv
 from typing import List, Tuple
-
-
-def index_range(page: int, page_size: int) -> Tuple[int, int]:
-    """on every next page the index will increment to the size"""
-    if page == 1:
-        start_index = 0
-    else:
-        start_index = (page_size * page) - page_size
-    end_index = page_size * page
-    return (start_index, end_index)
-
+index_range = __import__('0-simple_helper_function').index_range
 
 class Server:
     """Server class to paginate a database of popular baby names."""
