@@ -6,7 +6,7 @@ import math
 from typing import List
 
 
-def index_range(page: int, page_size: int) -> tuple:
+def index_range(page: int, page_size: int) -> tuple[int, int]:
     """on every next page the index will incrament to the size"""
     start_index: int
     end_index: int
