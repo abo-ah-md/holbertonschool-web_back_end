@@ -56,6 +56,9 @@ class Server:
         takes the same arguments (and defaults) as get_page and returns
         a dictionary containing the following key-value pairs
         """
+        assert isinstance(page, int) and page > 0
+        assert isinstance(page_size, int) and page_size > 0
+        
         dataset = self.dataset()
         data = self.get_page(page, page_size)
         total_pages = math.ceil(len(dataset) / page_size)
