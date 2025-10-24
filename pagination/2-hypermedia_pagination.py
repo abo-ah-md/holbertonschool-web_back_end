@@ -26,7 +26,7 @@ class Server:
     def __init__(self):
         self.__dataset = None
 
-    def dataset(self) -> List[List]:
+    def dataset(self) -> List[list[str]]:
         """Cached dataset"""
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
@@ -36,7 +36,7 @@ class Server:
 
         return self.__dataset
 
-    def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
+    def get_page(self, page: int = 1, page_size: int = 10) -> List[List[str]]:
         """
         Return the appropriate page of the dataset.
         Use assert to verify that page and page_size are positive integers.
@@ -51,7 +51,7 @@ class Server:
         # Return the slice if within bounds, else empty list
         return dataset[start:end] if start < len(dataset) else []
 
-    def get_hyper(self, page: int = 1, page_size: int = 10) -> dict:
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> dict[str, int | list[list[str]] | None]:
         """
         takes the same arguments (and defaults) as get_page and returns
         a dictionary containing the following key-value pairs
