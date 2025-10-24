@@ -1,19 +1,32 @@
 #!/usr/bin/env python3
 """
 This script provides statistics about Nginx logs stored in MongoDB
-by iterating efficiently over the collection.
+using a single aggregation pipeline for maximum efficiency.
 """
 from pymongo import MongoClient
 
 
-def log_stats_iterator():
+def log_stats_aggregate():
     """
-    Iterates over the nginx collection cursor to count stats.
+    Uses MongoDB's aggregation framework to get all stats in one query.
     """
     client = MongoClient("mongodb://127.0.0.1:27017")
     collection = client.logs.nginx
 
-    total_logs = 0
+    # Define the aggregation pipeline
+    pipeline = [
+        {
+            "$group": {
+                "_id": "$method",
+                "count": {"$sum": 1}
+            }
+        },
+        {
+            "$sort": {"_id": 1}  # Sort to ensure order, though not strictly needed
+        }
+    ]
+
+    # Get method counts
     method_counts = {
         "GET": 0,
         "POST": 0,
@@ -21,23 +34,22 @@ def log_stats_iterator():
         "PATCH": 0,
         "DELETE": 0
     }
-    status_check = 0
+    
+    results = collection.aggregate(pipeline)
+    for result in results:
+        if result["_id"] in method_counts:
+            method_counts[result["_id"]] = result["count"]
 
-    # Iterate over the cursor directly instead of loading into a list
-    # This is much more memory-efficient
-    for log_entry in collection.find():
-        total_logs += 1
-        
-        method = log_entry.get("method")
-        
-        if method in method_counts:
-            method_counts[method] += 1
-        
-        # Check for status check
-        if method == "GET" and log_entry.get("path") == "/status":
-            status_check += 1
+    # Get total logs count
+    total_logs = collection.count_documents({})
 
-    # Print the stats in the required format
+    # Get status check count
+    status_check = collection.count_documents({
+        "method": "GET",
+        "path": "/status"
+    })
+
+    # Print all stats
     print(f"{total_logs} logs")
     print("Methods:")
     print(f"\tmethod GET: {method_counts['GET']}")
@@ -49,3 +61,4 @@ def log_stats_iterator():
 
 
 if __name__ == "__main__":
+    log_stats_aggregate()
