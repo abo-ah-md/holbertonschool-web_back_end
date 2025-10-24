@@ -12,7 +12,7 @@ def log_stats():
     """
     # Connect to the MongoDB client
     client = MongoClient("mongodb://127.0.0.1:27017")
-    
+
     # Access the logs.nginx collection
     collection = client.logs.nginx
 
@@ -22,7 +22,7 @@ def log_stats():
 
     # 2. Methods
     print("Methods:")
-    
+
     methods_list = ["GET", "POST", "PUT", "PATCH", "DELETE"]
     for method in methods_list:
         count = collection.count_documents({"method": method})
@@ -30,10 +30,9 @@ def log_stats():
         print(f"\tmethod {method}: {count}")
 
     # 3. Status check (method=GET, path=/status)
-    status_check_count = collection.count_documents({
-        "method": "GET",
-        "path": "/status"
-    })
+    status_check_count = collection.count_documents(
+        {"method": "GET", "path": "/status"}
+    )
     print(f"{status_check_count} status check")
 
 
