@@ -1,0 +1,2 @@
+//to get the collections count
+db.getCollectionNames().length
