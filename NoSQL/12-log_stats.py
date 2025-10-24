@@ -1,43 +1,41 @@
 #!/usr/bin/env python3
-""" this module provides some stats about nginx logs """
+"""
+This script provides statistics about Nginx logs stored in MongoDB.
+It connects to the 'logs' database and 'nginx' collection.
+"""
 from pymongo import MongoClient
 
 
-def main():
-    """provides some stats about nginx logs"""
+def log_stats():
+    """
+    Connects to MongoDB and prints statistics for the nginx logs.
+    """
+    # Connect to the MongoDB client
     client = MongoClient("mongodb://127.0.0.1:27017")
+    
+    # Access the logs.nginx collection
     collection = client.logs.nginx
 
-    list_data = list(collection.find())
+    # 1. Total number of logs
+    total_logs = collection.count_documents({})
+    print(f"{total_logs} logs")
 
-    m_get, m_post, m_put = 0, 0, 0
-    m_patch, m_delete, s_check = 0, 0, 0
+    # 2. Methods
+    print("Methods:")
+    
+    methods_list = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    for method in methods_list:
+        count = collection.count_documents({"method": method})
+        # Note: The \t is a literal tab character for precise formatting
+        print(f"\tmethod {method}: {count}")
 
-    for i in list_data:
-        if i.get("method") is None:
-            continue
-        elif i.get("method") == "GET":
-            m_get += 1
-            if i.get("path") == "/status":
-                s_check += 1
-        elif i.get("method") == "POST":
-            m_post += 1
-        elif i.get("method") == "PUT":
-            m_put += 1
-        elif i.get("method") == "PATCH":
-            m_patch += 1
-        elif i.get("method") == "DELETE":
-            m_delete += 1
-
-    logs = len(list_data)
-    print(f"{logs} logs")
-    print(
-        f"Methods:\n\tmethod GET: {m_get}\
-    \n\tmethod POST: {m_post}\n\tmethod PUT: {m_put}\
-    \n\tmethod PATCH: {m_patch}\n\tmethod DELETE: {m_delete}"
-    )
-    print(f"{s_check} status check")
+    # 3. Status check (method=GET, path=/status)
+    status_check_count = collection.count_documents({
+        "method": "GET",
+        "path": "/status"
+    })
+    print(f"{status_check_count} status check")
 
 
 if __name__ == "__main__":
-    main()
+    log_stats()
