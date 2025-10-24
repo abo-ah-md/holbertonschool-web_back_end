@@ -1,2 +1,2 @@
-//to get the collections count
-db.getCollectionNames().length
+// script that displays the number of documents in the collection school
+db.school.count()
