@@ -1,64 +1,42 @@
 #!/usr/bin/env python3
 """
-This script provides statistics about Nginx logs stored in MongoDB
-using a single aggregation pipeline for maximum efficiency.
+This script provides statistics about Nginx logs stored in MongoDB.
+It connects to the 'logs' database and 'nginx' collection.
 """
 from pymongo import MongoClient
 
 
-def log_stats_aggregate():
+def log_stats():
     """
-    Uses MongoDB's aggregation framework to get all stats in one query.
+    Connects to MongoDB and prints statistics for the nginx logs
+    using count_documents for efficiency.
     """
+    # Connect to the MongoDB client
     client = MongoClient("mongodb://127.0.0.1:27017")
+
+    # Access the logs.nginx collection
     collection = client.logs.nginx
 
-    # Define the aggregation pipeline
-    pipeline = [
-        {
-            "$group": {
-                "_id": "$method",
-                "count": {"$sum": 1}
-            }
-        },
-        {
-            "$sort": {"_id": 1}  # Sort to ensure order, though not strictly needed
-        }
-    ]
-
-    # Get method counts
-    method_counts = {
-        "GET": 0,
-        "POST": 0,
-        "PUT": 0,
-        "PATCH": 0,
-        "DELETE": 0
-    }
-    
-    results = collection.aggregate(pipeline)
-    for result in results:
-        if result["_id"] in method_counts:
-            method_counts[result["_id"]] = result["count"]
-
-    # Get total logs count
+    # 1. Total number of logs
     total_logs = collection.count_documents({})
+    print(f"{total_logs} logs")
 
-    # Get status check count
-    status_check = collection.count_documents({
+    # 2. Methods
+    print("Methods:")
+
+    methods_list = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    for method in methods_list:
+        count = collection.count_documents({"method": method})
+        # Note: The \t is a literal tab character for precise formatting
+        print(f"\tmethod {method}: {count}")
+
+    # 3. Status check (method=GET, path=/status)
+    status_check_count = collection.count_documents({
         "method": "GET",
         "path": "/status"
     })
-
-    # Print all stats
-    print(f"{total_logs} logs")
-    print("Methods:")
-    print(f"\tmethod GET: {method_counts['GET']}")
-    print(f"\tmethod POST: {method_counts['POST']}")
-    print(f"\tmethod PUT: {method_counts['PUT']}")
-    print(f"\tmethod PATCH: {method_counts['PATCH']}")
-    print(f"\tmethod DELETE: {method_counts['DELETE']}")
-    print(f"{status_check} status check")
+    print(f"{status_check_count} status check")
 
 
 if __name__ == "__main__":
-    log_stats_aggregate()
+    log_stats()
