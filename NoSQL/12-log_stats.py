@@ -6,11 +6,11 @@ from pymongo import MongoClient
 
 
 if __name__ == "__main__":
-    client = MongoClient('mongodb://localhost:27017')
+    client = MongoClient("mongodb://localhost:27017")
     collec = client.logs.nginx
 
-    print(f'{collec.count_documents({})} logs')
-    print('Methods:')
+    print(f"{collec.count_documents({})} logs")
+    print("Methods:")
 
     print(f'\tmethod GET: {collec.count_documents({"method": "GET"})}')
     print(f'\tmethod POST: {collec.count_documents({"method": "POST"})}')
