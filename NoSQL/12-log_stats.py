@@ -1,40 +1,52 @@
 #!/usr/bin/env python3
 """
-This script provides statistics about Nginx logs stored in MongoDB.
-It connects to the 'logs' database and 'nginx' collection.
+This script provides statistics about Nginx logs stored in MongoDB
+by iterating efficiently over the collection.
 """
 from pymongo import MongoClient
 
 
-def log_stats():
+def log_stats_iterator():
     """
-    Connects to MongoDB and prints statistics for the nginx logs.
+    Iterates over the nginx collection cursor to count stats.
     """
-    # Connect to the MongoDB client
     client = MongoClient("mongodb://127.0.0.1:27017")
-
-    # Access the logs.nginx collection
     collection = client.logs.nginx
 
-    # 1. Total number of logs
-    total_logs = collection.count_documents({})
+    total_logs = 0
+    method_counts = {
+        "GET": 0,
+        "POST": 0,
+        "PUT": 0,
+        "PATCH": 0,
+        "DELETE": 0
+    }
+    status_check = 0
+
+    # Iterate over the cursor directly instead of loading into a list
+    # This is much more memory-efficient
+    for log_entry in collection.find():
+        total_logs += 1
+        
+        method = log_entry.get("method")
+        
+        if method in method_counts:
+            method_counts[method] += 1
+        
+        # Check for status check
+        if method == "GET" and log_entry.get("path") == "/status":
+            status_check += 1
+
+    # Print the stats in the required format
     print(f"{total_logs} logs")
-
-    # 2. Methods
     print("Methods:")
-
-    methods_list = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-    for method in methods_list:
-        count = collection.count_documents({"method": method})
-        # Note: The \t is a literal tab character for precise formatting
-        print(f"\tmethod {method}: {count}")
-
-    # 3. Status check (method=GET, path=/status)
-    status_check_count = collection.count_documents(
-        {"method": "GET", "path": "/status"}
-    )
-    print(f"{status_check_count} status check")
+    print(f"\tmethod GET: {method_counts['GET']}")
+    print(f"\tmethod POST: {method_counts['POST']}")
+    print(f"\tmethod PUT: {method_counts['PUT']}")
+    print(f"\tmethod PATCH: {method_counts['PATCH']}")
+    print(f"\tmethod DELETE: {method_counts['DELETE']}")
+    print(f"{status_check} status check")
 
 
 if __name__ == "__main__":
-    log_stats()
+    log_stats_iterator()
