@@ -51,14 +51,16 @@ class Server:
         # Return the slice if within bounds, else empty list
         return dataset[start:end] if start < len(dataset) else []
 
-    def get_hyper(self, page: int = 1, page_size: int = 10) -> dict[str, int | list[list[str]] | None]:
+    def get_hyper(
+        self, page: int = 1, page_size: int = 10
+    ) -> dict[str, int | list[list[str]] | None]:
         """
         takes the same arguments (and defaults) as get_page and returns
         a dictionary containing the following key-value pairs
         """
         assert isinstance(page, int) and page > 0
         assert isinstance(page_size, int) and page_size > 0
-        
+
         dataset = self.dataset()
         data = self.get_page(page, page_size)
         total_pages = math.ceil(len(dataset) / page_size)
