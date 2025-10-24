@@ -11,10 +11,3 @@ if __name__ == "__main__":
 
     print(f"{collec.count_documents({})} logs")
     print("Methods:")
-
-    print(f'\tmethod GET: {collec.count_documents({"method": "GET"})}')
-    print(f'\tmethod POST: {collec.count_documents({"method": "POST"})}')
-    print(f'\tmethod PUT: {collec.count_documents({"method": "PUT"})}')
-    print(f'\tmethod PATCH: {collec.count_documents({"method": "PATCH"})}')
-    print(f'\tmethod DELETE: {collec.count_documents({"method": "DELETE"})}')
-    print(f'{collec.count_documents({"path": "/status"})} status check')
