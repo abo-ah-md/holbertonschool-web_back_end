@@ -3,16 +3,13 @@
 Simple pagination module
 """
 
-import csv, math
-from typing import List, Tuple
+import csv
+import math
+from typing import List, Tuple, Any
 
 
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
-    """
-    Return a tuple containing a start and end index
-    corresponding to the range of indexes to return in a list
-    for the given pagination parameters.
-    """
+    """Return a tuple containing a start and end index."""
     start_index = (page - 1) * page_size
     end_index = start_index + page_size
     return start_index, end_index
@@ -23,10 +20,10 @@ class Server:
 
     DATA_FILE = "Popular_Baby_Names.csv"
 
-    def __init__(self):
-        self.__dataset = None
+    def __init__(self) -> None:
+        self.__dataset: list[list[str]] | None = None
 
-    def dataset(self) -> List[list[str]]:
+    def dataset(self) -> List[List[str]]:
         """Cached dataset"""
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
@@ -37,27 +34,16 @@ class Server:
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List[str]]:
-        """
-        Return the appropriate page of the dataset.
-        Use assert to verify that page and page_size are positive integers.
-        If the range is out of bounds, return an empty list.
-        """
+        """Return the appropriate page of the dataset."""
         assert isinstance(page, int) and page > 0
         assert isinstance(page_size, int) and page_size > 0
 
         start, end = index_range(page, page_size)
         dataset = self.dataset()
-
-        # Return the slice if within bounds, else empty list
         return dataset[start:end] if start < len(dataset) else []
 
-    def get_hyper(
-        self, page: int = 1, page_size: int = 10
-    ) -> dict[str, int | list[list[str]] | None]:
-        """
-        takes the same arguments (and defaults) as get_page and returns
-        a dictionary containing the following key-value pairs
-        """
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> dict[str, Any]:
+        """Return a hypermedia-style dictionary with pagination info."""
         assert isinstance(page, int) and page > 0
         assert isinstance(page_size, int) and page_size > 0
 
