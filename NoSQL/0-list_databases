@@ -1,3 +1,2 @@
-#!/bin/bash
-# Script that lists all databases in a MongoDB server
+// my comment
 show dbs
