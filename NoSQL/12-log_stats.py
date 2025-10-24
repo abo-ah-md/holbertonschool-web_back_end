@@ -49,4 +49,3 @@ def log_stats_iterator():
 
 
 if __name__ == "__main__":
-    log_stats_iterator()
