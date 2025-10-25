@@ -1,4 +1,3 @@
-// In JavaScript, `const` is used to declare variables that are constant, meaning their values cannot be reassigned after they are set.
 export function taskFirst() {
     const task = 'I prefer const when I can.';
     return task;
