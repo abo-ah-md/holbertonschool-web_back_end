@@ -1,12 +1,9 @@
-import ClassRoom from "./0-classroom";
+import ClassRoom from './0-classroom.js';
 
-function initializeRooms (){
-const newclass1 = new ClassRoom(19);
-const newclass2 = new ClassRoom(20);
-const newclass3 = new ClassRoom(34);
-return [
-    newclass1._maxStudentsSize,
-    newclass2._maxStudentsSize,
-    newclass3._maxStudentsSize
-]
+export default function initializeRooms() {
+  return [
+    new ClassRoom(19),
+    new ClassRoom(20),
+    new ClassRoom(34),
+  ];
 }
